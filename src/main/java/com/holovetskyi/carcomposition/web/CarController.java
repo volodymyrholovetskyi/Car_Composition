@@ -1,2 +1,4 @@
-package com.holovetskyi.carcomposition.web;public class CarController {
+package com.holovetskyi.carcomposition.web;
+
+public class CarController {
 }
