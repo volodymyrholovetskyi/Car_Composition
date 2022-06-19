@@ -1,19 +1,25 @@
 package com.holovetskyi.carcomposition.domain;
 
-import com.holovetskyi.carcomposition.domain.Car;
 import com.holovetskyi.carcomposition.validate.Validator;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
+
+import static com.holovetskyi.carcomposition.validate.Validator.*;
+import static com.holovetskyi.carcomposition.validate.Validator.hasCapitalLetter;
+import static com.holovetskyi.carcomposition.validate.Validator.hasEveryItemCapitalLetter;
+import static com.holovetskyi.carcomposition.validate.Validator.isPositiveDecimal;
+import static com.holovetskyi.carcomposition.validate.Validator.isPositiveDouble;
+import static com.holovetskyi.carcomposition.validate.Validator.isPositiveLong;
 
 @Component
 public class CarValidator implements Validator<Car> {
+
+    private final Map<String, String> errors = new HashMap<>();
+
     @Override
     public Map<String, String> validate(Car car) {
-        var errors = new HashMap<String, String>();
 
         if (car == null) {
             errors.put("car object", "null");
