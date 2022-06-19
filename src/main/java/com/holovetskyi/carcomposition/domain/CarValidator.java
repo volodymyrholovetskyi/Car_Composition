@@ -27,43 +27,74 @@ public class CarValidator implements Validator<Car> {
         }
 
         var model = car.model;
-        if (model == null) {
-            errors.put("model", "null");
-            return errors;
-        } else if (!model.matches("[A-Z ]+")) {
-            errors.put("model", "not correct");
-            return errors;
-        }
+       if (!validateModel(model)){
+           return errors;
+       }
 
         var price = car.price;
         if (price == null) {
             errors.put("price", "null");
             return errors;
-        } else if (car.price.compareTo(BigDecimal.ZERO) < 0) {
+        } else if (!isPositiveDecimal(price)) {
             errors.put("price", "cannot be negative");
             return errors;
         }
 
         var mileage = car.mileage;
-        if (car.mileage <= 0) {
+        if (!isPositiveLong(mileage)) {
             errors.put("mileage", "cannot be negative either null");
             return errors;
         }
 
-//        var components = car.components;
-//        if (components == null) {
-//            errors.put("components", "null");
-//            return errors;
-//        }
-//        Optional<String> component = components.stream()
-//                .filter(c -> !c.matches("[A-Z ]+"))
-//                .findFirst();
-//
-//        if (component.isPresent()) {
-//            errors.put("components", "not correct");
-//            return errors;
-//        }
-        return errors;
+        Engine engine = car.engine;
+        if (!validateEngine(engine)) {
+            return errors;
+        }
+
+        CarBody carBody = car.carBody;
+        if (!validateCarBody(carBody)) {
+            return errors;
+        }
+
+        Wheel wheel = car.wheel;
+        if (!validateModel(wheel.model)){
+            return errors;
+        }
+
+        isPositiveInteger(wheel.size);
+            return errors;
+    }
+
+    private boolean validateModel(String model) {
+        if (model == null) {
+            errors.put("model", "null");
+            return false;
+        } else if (!hasCapitalLetter(model, "[A-Z ]+")) {
+            errors.put("model", "not correct");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateEngine(Engine engine) {
+        double power = engine.power;
+
+        if (!isPositiveDouble(power)) {
+            errors.put("power", "cannot be negative either null");
+            return false;
+        }
+        return true;
+    }
+
+    private boolean validateCarBody(CarBody carBody) {
+        if (carBody.components == null) {
+            errors.put("model", "null");
+            return false;
+        } else if (!hasEveryItemCapitalLetter(carBody.components, "[A-Z ]+")) {
+            errors.put("model", "not correct");
+            return false;
+        }
+        return true;
     }
 }
 

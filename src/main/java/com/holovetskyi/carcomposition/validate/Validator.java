@@ -23,4 +23,30 @@ public interface Validator<T> {
                 .collect(Collectors.joining("\n")));
         return errors.isEmpty();
     }
+
+    static boolean hasCapitalLetter(String expression, String regex) {
+        return expression.matches(regex);
+    }
+
+    static boolean isPositiveDecimal(BigDecimal value) {
+        return value.compareTo(BigDecimal.ZERO) > 0;
+    }
+
+    static boolean isPositiveLong(long value) {
+        return value > 0;
+    }
+
+    static boolean isPositiveDouble(double value) {
+        return value > 0;
+    }
+
+    static boolean isPositiveInteger(double value) {
+        return value > 0;
+    }
+
+    static boolean hasEveryItemCapitalLetter(List<String> items, String regex) {
+        return items.stream().allMatch(item -> item.matches(regex));
+    }
+
+
 }
