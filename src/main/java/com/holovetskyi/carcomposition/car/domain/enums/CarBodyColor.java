@@ -1,4 +1,4 @@
-package com.holovetskyi.carcomposition.domain.enums;
+package com.holovetskyi.carcomposition.car.domain.enums;
 
 public enum CarBodyColor {
 

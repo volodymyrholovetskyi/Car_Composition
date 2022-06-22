@@ -1,4 +1,4 @@
-package com.holovetskyi.carcomposition.domain;
+package com.holovetskyi.carcomposition.car.domain;
 
 import com.holovetskyi.carcomposition.validate.Validator;
 import org.springframework.stereotype.Component;
@@ -14,7 +14,7 @@ import static com.holovetskyi.carcomposition.validate.Validator.isPositiveDouble
 import static com.holovetskyi.carcomposition.validate.Validator.isPositiveLong;
 
 @Component
-public class CarValidator implements Validator<Car> {
+public class CarValidator<C> implements Validator<Car> {
 
     private final Map<String, String> errors = new HashMap<>();
 
@@ -62,7 +62,8 @@ public class CarValidator implements Validator<Car> {
         }
 
         isPositiveInteger(wheel.size);
-            return errors;
+
+        return errors;
     }
 
     private boolean validateModel(String model) {
