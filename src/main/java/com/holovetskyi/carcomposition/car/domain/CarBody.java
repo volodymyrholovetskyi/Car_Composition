@@ -16,6 +16,7 @@ public class CarBody {
 CarBodyColor carBodyColor;
 
 CarBodyType carBodyType;
+
 List<String> components;
 
 }

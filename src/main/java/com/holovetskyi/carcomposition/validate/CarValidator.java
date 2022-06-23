@@ -18,7 +18,7 @@ import static com.holovetskyi.carcomposition.validate.Validator.isPositiveDouble
 import static com.holovetskyi.carcomposition.validate.Validator.isPositiveLong;
 
 @Component
-public class CarValidator<C> implements Validator<Car> {
+public class CarValidator<T> implements Validator<Car> {
 
     private final Map<String, String> errors = new HashMap<>();
 

@@ -1,9 +1,9 @@
-package com.holovetskyi.carcomposition.car.application;
+package com.holovetskyi.carcomposition.commons;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 public class Extensions {
-   static final String JSON = ".json";
+   public static final String JSON = ".json";
 
 }
