@@ -8,12 +8,18 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Builder
 @ToString
+@Getter
 public class Car {
 
     String model;
+
     BigDecimal price;
+
     long mileage;
+
     Engine engine;
+
     CarBody carBody;
+
     Wheel wheel;
 }

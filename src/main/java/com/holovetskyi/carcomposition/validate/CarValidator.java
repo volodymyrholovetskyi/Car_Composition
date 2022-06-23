@@ -1,5 +1,9 @@
-package com.holovetskyi.carcomposition.car.domain;
+package com.holovetskyi.carcomposition.validate;
 
+import com.holovetskyi.carcomposition.car.domain.Car;
+import com.holovetskyi.carcomposition.car.domain.CarBody;
+import com.holovetskyi.carcomposition.car.domain.Engine;
+import com.holovetskyi.carcomposition.car.domain.Wheel;
 import com.holovetskyi.carcomposition.validate.Validator;
 import org.springframework.stereotype.Component;
 
@@ -14,7 +18,7 @@ import static com.holovetskyi.carcomposition.validate.Validator.isPositiveDouble
 import static com.holovetskyi.carcomposition.validate.Validator.isPositiveLong;
 
 @Component
-public class CarValidator<C> implements Validator<Car> {
+public class CarValidator<T> implements Validator<Car> {
 
     private final Map<String, String> errors = new HashMap<>();
 
@@ -26,12 +30,12 @@ public class CarValidator<C> implements Validator<Car> {
             return errors;
         }
 
-        var model = car.model;
+        var model = car.getModel();
        if (!validateModel(model)){
            return errors;
        }
 
-        var price = car.price;
+        var price = car.getPrice();
         if (price == null) {
             errors.put("price", "null");
             return errors;
@@ -40,28 +44,28 @@ public class CarValidator<C> implements Validator<Car> {
             return errors;
         }
 
-        var mileage = car.mileage;
+        var mileage = car.getMileage();
         if (!isPositiveLong(mileage)) {
             errors.put("mileage", "cannot be negative either null");
             return errors;
         }
 
-        Engine engine = car.engine;
+        Engine engine = car.getEngine();
         if (!validateEngine(engine)) {
             return errors;
         }
 
-        CarBody carBody = car.carBody;
+        CarBody carBody = car.getCarBody();
         if (!validateCarBody(carBody)) {
             return errors;
         }
 
-        Wheel wheel = car.wheel;
-        if (!validateModel(wheel.model)){
+        Wheel wheel = car.getWheel();
+        if (!validateModel(wheel.getModel())){
             return errors;
         }
 
-        isPositiveInteger(wheel.size);
+        isPositiveInteger(wheel.getSize());
 
         return errors;
     }
@@ -78,7 +82,7 @@ public class CarValidator<C> implements Validator<Car> {
     }
 
     private boolean validateEngine(Engine engine) {
-        double power = engine.power;
+        double power = engine.getPower();
 
         if (!isPositiveDouble(power)) {
             errors.put("power", "cannot be negative either null");
@@ -88,10 +92,10 @@ public class CarValidator<C> implements Validator<Car> {
     }
 
     private boolean validateCarBody(CarBody carBody) {
-        if (carBody.components == null) {
+        if (carBody.getComponents() == null) {
             errors.put("model", "null");
             return false;
-        } else if (!hasEveryItemCapitalLetter(carBody.components, "[A-Z ]+")) {
+        } else if (!hasEveryItemCapitalLetter(carBody.getComponents(), "[A-Z ]+")) {
             errors.put("model", "not correct");
             return false;
         }
