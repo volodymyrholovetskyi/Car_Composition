@@ -1,15 +1,13 @@
 package com.holovetskyi.carcomposition.car.domain;
 
 import com.holovetskyi.carcomposition.car.domain.enums.EngineType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @ToString
+@Getter
 public class Engine {
 
     EngineType engineType;

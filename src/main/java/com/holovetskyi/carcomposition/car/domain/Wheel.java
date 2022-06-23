@@ -1,15 +1,13 @@
 package com.holovetskyi.carcomposition.car.domain;
 
 import com.holovetskyi.carcomposition.car.domain.enums.TyreType;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @ToString
+@Getter
 public class Wheel {
 
     String model;

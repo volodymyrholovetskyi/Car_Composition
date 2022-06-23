@@ -1,0 +1,18 @@
+[
+  {
+    "model": "BMW",
+    "price": 2000,
+    "mileage": 3500,
+    "engine": {},
+    "carBody": {},
+    "wheel": {}
+  },
+  {
+    "model": "BMW",
+    "price": 2000,
+    "mileage": 3500,
+    "engine": {},
+    "carBody": {},
+    "wheel": {}
+  }
+]

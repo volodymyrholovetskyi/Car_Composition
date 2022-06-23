@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @Builder
 @ToString
+@Getter
 public class Car {
 
     String model;
