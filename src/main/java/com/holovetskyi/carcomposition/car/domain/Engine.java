@@ -5,10 +5,10 @@ import lombok.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 @Builder
 @ToString
 @Getter
-@Setter
 public class Engine {
 
     EngineType engineType;

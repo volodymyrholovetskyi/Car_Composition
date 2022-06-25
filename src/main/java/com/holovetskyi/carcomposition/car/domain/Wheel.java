@@ -5,10 +5,10 @@ import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@EqualsAndHashCode
 @Builder
 @ToString
 @Getter
-@Setter
 public class Wheel {
 
     String model;
