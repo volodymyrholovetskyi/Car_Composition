@@ -1,8 +1,6 @@
 package com.holovetskyi.carcomposition.car.application;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.type.ReferenceType;
 import com.holovetskyi.carcomposition.car.domain.Car;
 import com.holovetskyi.carcomposition.car.domain.CarBody;
 import com.holovetskyi.carcomposition.car.domain.Engine;
@@ -11,79 +9,62 @@ import com.holovetskyi.carcomposition.car.domain.enums.CarBodyColor;
 import com.holovetskyi.carcomposition.car.domain.enums.CarBodyType;
 import com.holovetskyi.carcomposition.car.domain.enums.EngineType;
 import com.holovetskyi.carcomposition.car.domain.enums.TyreType;
-import com.holovetskyi.carcomposition.car.web.dto.CreateFilenameDto;
-import com.holovetskyi.carcomposition.commons.BasePath;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-
-import static com.holovetskyi.carcomposition.commons.BasePath.*;
-import static com.holovetskyi.carcomposition.commons.Extensions.JSON;
-
 
 @Service
 @Slf4j
-@RequiredArgsConstructor
+@PropertySource("classpath:parameter.properties")
 public class CarInitializerService {
-
     private final ObjectMapper objectMapper;
-    public void initialize(CreateFilenameDto filename) {
+    private final String filename;
+
+    public CarInitializerService(ObjectMapper objectMapper, @Value("${car.filename}") String filename) {
+        this.objectMapper = objectMapper;
+        this.filename = filename;
+    }
+
+    public void initialize() {
         List<Car> cars = build();
-        toJson(filename, cars);
-        initRepo(filename);
+        toJson(cars);
     }
 
-    private void toJson(final CreateFilenameDto filenameDto, List<Car> cars) {
-
+    private void toJson(List<Car> cars) {
         try {
-            FileWriter fileWriter = new FileWriter(filenameDto.filename.concat(JSON));
-            objectMapper.writeValue(fileWriter, cars);
+            objectMapper.writeValue(new File(filename), cars);
         } catch (IOException ex) {
-            log.warn("Cars write error: " + ex.getMessage());
-        }
-    }
-
-    private void initRepo(CreateFilenameDto filenameDto) {
-        try {
-           File file = new File(BASE_PATH.concat(filenameDto.filename + JSON));
-            List<Car> cars = objectMapper.readValue(file, new TypeReference<>() {});
-
-            cars.forEach(System.out::println);
-        } catch (IOException ex){
-            log.warn("Cars read error: " + ex.getMessage());
+            log.error("Car write ERROR: " + ex.getMessage());
         }
     }
 
     private List<Car> build() {
-        List<Car> cars = new ArrayList<>();
-        Car bmw = Car
-                .builder()
-                .model("BMW")
-                .price(new BigDecimal("2000"))
-                .mileage(3500L)
-                .engine(new Engine(EngineType.DIESEL, 150))
-                .carBody(new CarBody(CarBodyColor.BLACK, CarBodyType.COMBI, List.of("DPF", "LPG")))
-                .wheel(new Wheel("CRAB", 20, TyreType.SUMMER))
-                .build();
+        return List.of(
+                Car
+                        .builder()
+                        .model("AUDI")
+                        .price(BigDecimal.valueOf(30_000))
+                        .mileage(200_000L)
+                        .engine(new Engine(EngineType.GASOLINE, 155))
+                        .carBody(new CarBody(CarBodyColor.BLACK, CarBodyType.COMBI, List.of("CLIMATRONIC", "ABS")))
+                        .wheel(new Wheel("BABSON", 16, TyreType.SUMMER))
+                        .build(),
 
-        Car audi = Car
-                .builder()
-                .model("BMW")
-                .price(new BigDecimal("2000"))
-                .mileage(3500L)
-                .engine(new Engine(EngineType.DIESEL, 150))
-                .carBody(new CarBody(CarBodyColor.BLACK, CarBodyType.COMBI, List.of("DPF", "LPG")))
-                .wheel(new Wheel("CRAB", 20, TyreType.SUMMER))
-                .build();
-        cars.add(bmw);
-        cars.add(audi);
-        return cars;
+                Car
+                        .builder()
+                        .model("BMW")
+                        .price(BigDecimal.valueOf(50_000))
+                        .mileage(150_000L)
+                        .engine(new Engine(EngineType.DIESEL, 150))
+                        .carBody(new CarBody(CarBodyColor.BLACK, CarBodyType.HATCHBACK, List.of("CRUISE CONTROL", "DPF")))
+                        .wheel(new Wheel("VELEX", 18, TyreType.SUMMER))
+                        .build());
     }
 }

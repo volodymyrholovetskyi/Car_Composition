@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 @Builder
 @ToString
 @Getter
+@Setter
 public class Car {
 
     String model;

@@ -4,18 +4,12 @@ import com.holovetskyi.carcomposition.car.domain.Car;
 import com.holovetskyi.carcomposition.car.domain.CarBody;
 import com.holovetskyi.carcomposition.car.domain.Engine;
 import com.holovetskyi.carcomposition.car.domain.Wheel;
-import com.holovetskyi.carcomposition.validate.Validator;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.holovetskyi.carcomposition.validate.Validator.*;
-import static com.holovetskyi.carcomposition.validate.Validator.hasCapitalLetter;
-import static com.holovetskyi.carcomposition.validate.Validator.hasEveryItemCapitalLetter;
-import static com.holovetskyi.carcomposition.validate.Validator.isPositiveDecimal;
-import static com.holovetskyi.carcomposition.validate.Validator.isPositiveDouble;
-import static com.holovetskyi.carcomposition.validate.Validator.isPositiveLong;
 
 @Component
 public class CarValidator<T> implements Validator<Car> {
@@ -31,9 +25,9 @@ public class CarValidator<T> implements Validator<Car> {
         }
 
         var model = car.getModel();
-       if (!validateModel(model)){
-           return errors;
-       }
+        if (!validateModel(model)) {
+            return errors;
+        }
 
         var price = car.getPrice();
         if (price == null) {
@@ -61,11 +55,13 @@ public class CarValidator<T> implements Validator<Car> {
         }
 
         Wheel wheel = car.getWheel();
-        if (!validateModel(wheel.getModel())){
+        if (!validateModel(wheel.getModel())) {
             return errors;
         }
-
-        isPositiveInteger(wheel.getSize());
+        if (!isPositiveInteger(wheel.getSize())) {
+            errors.put("wheel size", "cannot be negative either null");
+            return errors;
+        }
 
         return errors;
     }
@@ -96,7 +92,7 @@ public class CarValidator<T> implements Validator<Car> {
             errors.put("model", "null");
             return false;
         } else if (!hasEveryItemCapitalLetter(carBody.getComponents(), "[A-Z ]+")) {
-            errors.put("model", "not correct");
+            errors.put("components", "not correct");
             return false;
         }
         return true;

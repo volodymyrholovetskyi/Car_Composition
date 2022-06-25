@@ -10,6 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 @ToString
+@Setter
 @Getter
 public class CarBody {
 

@@ -8,6 +8,7 @@ import lombok.*;
 @Builder
 @ToString
 @Getter
+@Setter
 public class Engine {
 
     EngineType engineType;
