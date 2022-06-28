@@ -3,6 +3,7 @@ package com.holovetskyi.carcomposition.car.infrastracter.repo;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.holovetskyi.carcomposition.car.domain.Car;
+import com.holovetskyi.carcomposition.car.infrastracter.repo.type.SortType;
 import com.holovetskyi.carcomposition.validate.CarValidator;
 import com.holovetskyi.carcomposition.validate.Validator;
 import lombok.extern.slf4j.Slf4j;
@@ -14,10 +15,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import static com.holovetskyi.carcomposition.car.domain.CarUtils.*;
+import static com.holovetskyi.carcomposition.car.infrastracter.repo.type.SortType.POWER;
+import static com.holovetskyi.carcomposition.car.infrastracter.repo.type.SortType.SIZE;
+import static com.holovetskyi.carcomposition.validate.Validator.*;
 
 @Repository
 @Slf4j
@@ -41,7 +44,7 @@ public class CarRepo {
             return objectMapper.readValue(new File(filename), new TypeReference<List<Car>>() {
                     })
                     .stream()
-                    .filter(car -> Validator.validate(carValidator, car))
+                    .filter(car -> validate(carValidator, car))
                     .filter(car -> cars.add(car))
                     .toList();
 
@@ -59,15 +62,15 @@ public class CarRepo {
      malejąco.
      */
 
-    public List<Car> sort(SortCriterion sortCriterion, boolean descending) {
+    public List<Car> sort(SortCriterion criterion) {
 
-        return descending ?
-                switch (sortCriterion) {
+        return criterion.isDescending() ?
+                switch (criterion.getSortType()) {
                     case POWER -> cars.stream().sorted(compareByPowerDesc).toList();
                     case SIZE -> cars.stream().sorted(compareBySizeDesc).toList();
                     default -> cars.stream().map(Car::newCarWithSortedComponentsDesc).toList();
                 } :
-                switch (sortCriterion) {
+                switch (criterion.getSortType()) {
                     case POWER -> cars.stream().sorted(compareByPower).toList();
                     case SIZE -> cars.stream().sorted(compareBySize).toList();
                     default -> cars.stream().map(Car::newCarWithSortedComponents).toList();
