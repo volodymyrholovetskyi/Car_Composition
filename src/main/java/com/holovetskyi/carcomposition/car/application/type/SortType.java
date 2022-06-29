@@ -1,4 +1,4 @@
-package com.holovetskyi.carcomposition.car.infrastracter.repo.type;
+package com.holovetskyi.carcomposition.car.application.type;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -7,7 +7,7 @@ public enum SortType {
 
     COMPONENTS, POWER, SIZE;
 
-    public Optional<SortType> sortType(String sort){
+    public static Optional<SortType> checkingParameter(String sort){
        return Arrays.stream(values())
                 .filter(c -> c.name().equalsIgnoreCase(sort))
                 .findFirst();

@@ -2,14 +2,9 @@ package com.holovetskyi.carcomposition.car.web;
 
 import com.holovetskyi.carcomposition.car.application.CarService;
 import com.holovetskyi.carcomposition.car.domain.Car;
-import com.holovetskyi.carcomposition.car.domain.Wheel;
-import com.holovetskyi.carcomposition.car.domain.enums.TyreType;
 import com.holovetskyi.carcomposition.car.web.dto.SortCriterionDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.autoconfigure.batch.BatchDataSource;
-import org.springframework.context.annotation.PropertySource;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -25,14 +20,14 @@ public class CarController {
     private final CarService service;
 
     @GetMapping(value = "/sort")
-    List<Car> allSortCar(
+    List<Car> sortCars(
             @RequestParam Optional<String> criterion,
-            @RequestParam Optional<Boolean> descending) {
+            @RequestParam Optional<Boolean> ascending) {
 
-        if (criterion.isPresent() && descending.isPresent()) {
-            return service.sortComponents(new SortCriterionDto(criterion.get(), descending.get()));
+        if (criterion.isPresent() && ascending.isPresent()) {
+            return service.sort(new SortCriterionDto(criterion.get(), ascending.get()));
         } else if (criterion.isPresent()) {
-            return service.sortComponents(new SortCriterionDto(criterion.get(), false));
+            return service.sort(new SortCriterionDto(criterion.get(), true));
         }
         return Collections.emptyList();
     }

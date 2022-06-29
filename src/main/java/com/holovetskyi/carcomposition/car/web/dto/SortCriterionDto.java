@@ -8,6 +8,5 @@ import lombok.Data;
 public class SortCriterionDto {
 
     String sortedCriterion;
-
     boolean descending;
 }
