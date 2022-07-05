@@ -12,8 +12,6 @@ import lombok.*;
 public class Wheel {
 
     String model;
-
     int size;
-
     TyreType tyreType;
 }

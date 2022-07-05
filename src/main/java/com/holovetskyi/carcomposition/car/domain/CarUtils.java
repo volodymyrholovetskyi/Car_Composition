@@ -10,4 +10,6 @@ public interface CarUtils {
 
     Comparator<Car> compareBySize = Comparator.comparing(car -> car.wheel.size, Comparator.reverseOrder());
     Comparator<Car> compareByPower = Comparator.comparing(car -> car.engine.power, Comparator.reverseOrder());
+
+    
 }

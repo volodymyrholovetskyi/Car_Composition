@@ -19,7 +19,6 @@ public class CarBody {
 CarBodyColor carBodyColor;
 
 CarBodyType carBodyType;
-
 List<String> components;
 
 public CarBody withSortedComponents(){
@@ -31,5 +30,4 @@ public CarBody withSortedComponents(){
     components.stream().sorted(Comparator.comparing(c -> c.compareTo(c), Comparator.reverseOrder())).toList();
         return this;
     }
-
 }

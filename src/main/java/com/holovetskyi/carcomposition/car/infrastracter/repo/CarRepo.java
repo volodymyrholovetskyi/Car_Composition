@@ -3,9 +3,7 @@ package com.holovetskyi.carcomposition.car.infrastracter.repo;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.holovetskyi.carcomposition.car.domain.Car;
-import com.holovetskyi.carcomposition.car.infrastracter.repo.type.SortType;
 import com.holovetskyi.carcomposition.validate.CarValidator;
-import com.holovetskyi.carcomposition.validate.Validator;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -17,9 +15,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.holovetskyi.carcomposition.car.domain.CarUtils.*;
-import static com.holovetskyi.carcomposition.car.infrastracter.repo.type.SortType.POWER;
-import static com.holovetskyi.carcomposition.car.infrastracter.repo.type.SortType.SIZE;
 import static com.holovetskyi.carcomposition.validate.Validator.*;
 
 @Repository
@@ -54,27 +49,8 @@ public class CarRepo {
         return Collections.emptyList();
     }
 
-    /**
-     * Metoda zwraca kolekcję samochodów posortowaną według kryterium
-     podanego jako argument. Metoda powinna umożliwiać sortowanie
-     według ilości komponentów, mocy silnika oraz rozmiaru opony.
-     Dodatkowo metoda powinna umożliwiać sortowanie rosnąco oraz
-     malejąco.
-     */
-
-    public List<Car> sort(SortCriterion criterion) {
-
-        return criterion.isDescending() ?
-                switch (criterion.getSortType()) {
-                    case POWER -> cars.stream().sorted(compareByPowerDesc).toList();
-                    case SIZE -> cars.stream().sorted(compareBySizeDesc).toList();
-                    default -> cars.stream().map(Car::newCarWithSortedComponentsDesc).toList();
-                } :
-                switch (criterion.getSortType()) {
-                    case POWER -> cars.stream().sorted(compareByPower).toList();
-                    case SIZE -> cars.stream().sorted(compareBySize).toList();
-                    default -> cars.stream().map(Car::newCarWithSortedComponents).toList();
-                };
-
+    public List<Car> findAll(){
+        return cars;
     }
+
 }
