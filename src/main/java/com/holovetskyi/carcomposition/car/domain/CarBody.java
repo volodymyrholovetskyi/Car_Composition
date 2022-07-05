@@ -30,5 +30,4 @@ public CarBody withSortedComponents(){
     components.stream().sorted(Comparator.comparing(c -> c.compareTo(c), Comparator.reverseOrder())).toList();
         return this;
     }
-
 }

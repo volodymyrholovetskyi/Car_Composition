@@ -49,7 +49,7 @@ public class CarRepo {
         return Collections.emptyList();
     }
 
-    public List<Car> getAllCars(){
+    public List<Car> findAll(){
         return cars;
     }
 
