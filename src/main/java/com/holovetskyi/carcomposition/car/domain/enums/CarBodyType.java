@@ -7,4 +7,5 @@ public enum CarBodyType {
 
     SEDAN, HATCHBACK, COMBI;
 
+
 }

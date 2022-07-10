@@ -2,9 +2,9 @@ package com.holovetskyi.carcomposition.car.web;
 
 import com.holovetskyi.carcomposition.car.application.CarService;
 import com.holovetskyi.carcomposition.car.domain.Car;
-import com.holovetskyi.carcomposition.car.web.dto.BodyTypeAndPriceDto;
-import com.holovetskyi.carcomposition.car.web.dto.CriterionDto;
-import com.holovetskyi.carcomposition.car.web.dto.SpecificEngineDto;
+import com.holovetskyi.carcomposition.car.web.dto.GetBodyTypeAndPriceDto;
+import com.holovetskyi.carcomposition.car.web.dto.GetCriterionDto;
+import com.holovetskyi.carcomposition.car.web.dto.GetSpecificEngineDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -26,26 +26,26 @@ public class CarController {
 
     @GetMapping(value = "/sort/criterion")
     @ResponseStatus(OK)
-    List<Car> sortCars(
+    List<Car> sortCarsByCriterion(
             @RequestParam Optional<String> criterion,
             @RequestParam Optional<Boolean> ascending) {
 
         if (criterion.isPresent() && ascending.isPresent()) {
-            return service.sort(new CriterionDto(criterion.get(), ascending.get()));
+            return service.sort(new GetCriterionDto(criterion.get(), ascending.get()));
         } else if (criterion.isPresent()) {
-            return service.sort(new CriterionDto(criterion.get(), true));
+            return service.sort(new GetCriterionDto(criterion.get(), true));
         }
         return Collections.emptyList();
     }
 
     @GetMapping(value = "/{body}/{from}/{to}")
     @ResponseStatus(OK)
-    List<Car> carByBodyTypeAndPriceFromTo(
+    List<Car> sortCarsByBodyTypeAndPriceFromTo(
             @PathVariable String body,
             @PathVariable() BigDecimal from,
             @PathVariable BigDecimal to) {
 
-        var carBody = new BodyTypeAndPriceDto(body, from, to);
+        var carBody = new GetBodyTypeAndPriceDto(body, from, to);
 
         return service.filterByBodyTypeAndPriceFromTo(carBody);
     }
@@ -53,9 +53,9 @@ public class CarController {
     @GetMapping(value = "sort/model")
     @ResponseStatus(OK)
     List<Car> sortByModelAboutSpecificEngine(@RequestParam String engine) {
-        var dto = new SpecificEngineDto(engine);
+        var dto = new GetSpecificEngineDto(engine);
 
-        return service.sortByModelAboutSpecificEngineDto(engine);
+        return service.sortByModelAboutSpecificEngineDto(dto);
 
     }
 }
