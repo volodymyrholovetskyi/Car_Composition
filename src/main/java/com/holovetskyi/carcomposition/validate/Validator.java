@@ -16,7 +16,7 @@ public interface Validator<T> {
 
     static <T> boolean validate(Validator<T> validator, T t) {
         var errors = validator.validate(t);
-        LOG.error(errors
+        LOG.warn(errors
                 .entrySet()
                 .stream()
                 .map(e -> e.getKey() + ": " + e.getValue())
@@ -47,6 +47,4 @@ public interface Validator<T> {
     static boolean hasEveryItemCapitalLetter(List<String> items, String regex) {
         return items.stream().allMatch(item -> item.matches(regex));
     }
-
-
 }

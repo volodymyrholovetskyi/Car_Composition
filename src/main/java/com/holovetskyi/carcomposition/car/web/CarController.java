@@ -5,6 +5,9 @@ import com.holovetskyi.carcomposition.car.domain.Car;
 import com.holovetskyi.carcomposition.car.web.dto.GetBodyTypeAndPriceDto;
 import com.holovetskyi.carcomposition.car.web.dto.GetCriterionDto;
 import com.holovetskyi.carcomposition.car.web.dto.GetSpecificEngineDto;
+import com.holovetskyi.carcomposition.car.web.dto.type.BodyTypeDto;
+import com.holovetskyi.carcomposition.car.web.dto.ValidatorDto;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -24,16 +27,16 @@ public class CarController {
 
     private final CarService service;
 
-    @GetMapping(value = "/sort/criterion")
+    @GetMapping(value = "/sort")
     @ResponseStatus(OK)
     List<Car> sortCarsByCriterion(
             @RequestParam Optional<String> criterion,
-            @RequestParam Optional<Boolean> ascending) {
+            @RequestParam Optional<Boolean> descending) {
 
-        if (criterion.isPresent() && ascending.isPresent()) {
-            return service.sort(new GetCriterionDto(criterion.get(), ascending.get()));
+        if (criterion.isPresent() && descending.isPresent()) {
+            return service.sort(new GetCriterionDto(criterion.get(), descending.get()));
         } else if (criterion.isPresent()) {
-            return service.sort(new GetCriterionDto(criterion.get(), true));
+            return service.sort(new GetCriterionDto(criterion.get(), false));
         }
         return Collections.emptyList();
     }
@@ -45,9 +48,10 @@ public class CarController {
             @PathVariable() BigDecimal from,
             @PathVariable BigDecimal to) {
 
-        var carBody = new GetBodyTypeAndPriceDto(body, from, to);
+        var carBody = new RestBodyTypeAndPrice(body, from, to);
+        GetBodyTypeAndPriceDto priceDto = carBody.toBodyTypeAndPriceDto();
 
-        return service.filterByBodyTypeAndPriceFromTo(carBody);
+        return service.filterByBodyTypeAndPriceFromTo(priceDto);
     }
 
     @GetMapping(value = "sort/model")
@@ -57,6 +61,24 @@ public class CarController {
 
         return service.sortByModelAboutSpecificEngineDto(dto);
 
+    }
+
+    @AllArgsConstructor
+    public static class RestBodyTypeAndPrice {
+
+        String body;
+        BigDecimal from;
+        BigDecimal to;
+
+        public GetBodyTypeAndPriceDto toBodyTypeAndPriceDto() {
+            ValidatorDto<BodyTypeDto> validatorDto = new ValidatorDto<>();
+            BodyTypeDto bodyTypeDto = validatorDto.isCorrectType(body)
+                    .orElseThrow(() -> new IllegalArgumentException("Param incorrect: " + body));
+            if (!validatorDto.isPositive(from) && !validatorDto.isPositive(to)) {
+                throw new IllegalArgumentException("Parameter cannot be negative!");
+            }
+            return new GetBodyTypeAndPriceDto(bodyTypeDto, from, to);
+        }
     }
 }
 

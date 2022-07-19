@@ -2,8 +2,8 @@ package com.holovetskyi.carcomposition.car.application;
 
 import com.holovetskyi.carcomposition.car.domain.Car;
 import com.holovetskyi.carcomposition.car.infrastracter.repo.CarRepo;
-import com.holovetskyi.carcomposition.car.web.dto.GetCriterionDto;
 import com.holovetskyi.carcomposition.car.web.dto.GetBodyTypeAndPriceDto;
+import com.holovetskyi.carcomposition.car.web.dto.GetCriterionDto;
 import com.holovetskyi.carcomposition.car.web.dto.GetSpecificEngineDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -42,11 +42,19 @@ public class CarService {
     }
 
     /**
-     *  Metoda zwraca kolekcję samochodów o określonym rodzaju nadwozia
+     * Metoda zwraca kolekcję samochodów o określonym rodzaju nadwozia
      * przekazanym jako argument (CarBodyType) oraz o cenie z
      * przedziału <a, b>, gdzie a oraz b to kolejne argumenty metody.
      */
 
+//    public List<Car> filterByBodyTypeAndPriceFromTo(GetBodyTypeAndPriceDto bodyTypeAndPrice) {
+//
+//        return getAllCars()
+//                .stream()
+//                .filter(car -> car.hasBodyType(bodyTypeAndPrice.getBodyTypeDto()))
+//                .filter(car -> car.hasPriceBetween(bodyTypeAndPrice.getFrom(), bodyTypeAndPrice.getTo()))
+//                .toList();
+//    }
     public List<Car> filterByBodyTypeAndPriceFromTo(GetBodyTypeAndPriceDto bodyTypeAndPrice) {
 
         return getAllCars()
@@ -63,11 +71,7 @@ public class CarService {
      */
 
     public List<Car> sortByModelAboutSpecificEngineDto(GetSpecificEngineDto dto) {
-
-        return getAllCars()
-                .stream()
-                .filter()
-
+        return null;
     }
 
 

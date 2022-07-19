@@ -3,8 +3,6 @@ package com.holovetskyi.carcomposition.car.web.dto;
 import com.holovetskyi.carcomposition.car.web.dto.type.CriterionTypeDto;
 import lombok.Data;
 
-import static com.holovetskyi.carcomposition.car.web.dto.type.CriterionTypeDto.checkCriterion;
-
 
 @Data
 public class GetCriterionDto {
@@ -15,7 +13,8 @@ public class GetCriterionDto {
     boolean descending;
 
     public GetCriterionDto(String criterion, boolean descending) {
-        this.criterionTypeDto = checkCriterion(criterion);
+//        this.criterionTypeDto = checkCriterion(criterion);
+        this.criterionTypeDto = getCriterionTypeDto();
         this.descending = descending;
     }
 

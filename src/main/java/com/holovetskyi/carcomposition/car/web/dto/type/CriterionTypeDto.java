@@ -4,7 +4,6 @@ import java.util.Arrays;
 
 public enum CriterionTypeDto {
 
-
     COMPONENTS, POWER, SIZE;
 
     public static CriterionTypeDto checkCriterion(String criterion) {

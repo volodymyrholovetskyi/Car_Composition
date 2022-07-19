@@ -5,8 +5,6 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 
-import static com.holovetskyi.carcomposition.car.web.dto.type.BodyTypeDto.checkBodyType;
-
 @Data
 public class GetBodyTypeAndPriceDto {
 
@@ -16,9 +14,11 @@ public class GetBodyTypeAndPriceDto {
     BigDecimal to;
 
 
-    public GetBodyTypeAndPriceDto(String body, BigDecimal from, BigDecimal to) {
-        this.bodyTypeDto = checkBodyType(body);
+    public GetBodyTypeAndPriceDto(BodyTypeDto bodyTypeDto, BigDecimal from, BigDecimal to) {
+        this.bodyTypeDto = bodyTypeDto;
         this.from = from;
         this.to = to;
+
     }
+
 }
