@@ -6,7 +6,8 @@ import com.holovetskyi.carcomposition.car.web.dto.GetBodyTypeAndPriceDto;
 import com.holovetskyi.carcomposition.car.web.dto.GetCriterionDto;
 import com.holovetskyi.carcomposition.car.web.dto.GetSpecificEngineDto;
 import com.holovetskyi.carcomposition.car.web.dto.type.BodyTypeDto;
-import com.holovetskyi.carcomposition.car.web.dto.ValidatorDto;
+import com.holovetskyi.carcomposition.car.web.dto.type.EngineTypeDto;
+import com.holovetskyi.carcomposition.validate.ValidatorDto;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,35 +50,45 @@ public class CarController {
             @PathVariable BigDecimal to) {
 
         var carBody = new RestBodyTypeAndPrice(body, from, to);
-        GetBodyTypeAndPriceDto priceDto = carBody.toBodyTypeAndPriceDto();
 
-        return service.filterByBodyTypeAndPriceFromTo(priceDto);
+        return service.filterByBodyTypeAndPriceFromTo(carBody.toBodyTypeAndPriceDto());
     }
 
     @GetMapping(value = "sort/model")
     @ResponseStatus(OK)
     List<Car> sortByModelAboutSpecificEngine(@RequestParam String engine) {
-        var dto = new GetSpecificEngineDto(engine);
 
-        return service.sortByModelAboutSpecificEngineDto(dto);
+        var dto = new RestSpecificEngine(engine);
 
+        return service.sortByModelAboutSpecificEngineDto(dto.toSpecificEngine());
     }
 
     @AllArgsConstructor
     public static class RestBodyTypeAndPrice {
-
         String body;
         BigDecimal from;
         BigDecimal to;
 
         public GetBodyTypeAndPriceDto toBodyTypeAndPriceDto() {
-            ValidatorDto<BodyTypeDto> validatorDto = new ValidatorDto<>();
-            BodyTypeDto bodyTypeDto = validatorDto.isCorrectType(body)
-                    .orElseThrow(() -> new IllegalArgumentException("Param incorrect: " + body));
+            var validatorDto = new ValidatorDto<BodyTypeDto>();
+            var bodyTypeDto = validatorDto.isCorrectType(body).orElseThrow(() -> new IllegalArgumentException("Param incorrect: " + body));
             if (!validatorDto.isPositive(from) && !validatorDto.isPositive(to)) {
                 throw new IllegalArgumentException("Parameter cannot be negative!");
             }
             return new GetBodyTypeAndPriceDto(bodyTypeDto, from, to);
+        }
+    }
+
+    @AllArgsConstructor
+    public static class RestSpecificEngine {
+
+        String engine;
+
+        public GetSpecificEngineDto toSpecificEngine () {
+            var validatorDto = new ValidatorDto<EngineTypeDto>()
+                    .isCorrectType(engine)
+                    .orElseThrow(() -> new IllegalArgumentException("Param incorrect: " + engine));
+            return new GetSpecificEngineDto(validatorDto);
         }
     }
 }

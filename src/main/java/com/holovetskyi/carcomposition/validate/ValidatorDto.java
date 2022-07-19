@@ -1,4 +1,4 @@
-package com.holovetskyi.carcomposition.car.web.dto;
+package com.holovetskyi.carcomposition.validate;
 
 import java.math.BigDecimal;
 import java.util.Arrays;
