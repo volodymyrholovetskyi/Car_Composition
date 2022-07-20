@@ -2,9 +2,9 @@ package com.holovetskyi.carcomposition.car.application;
 
 import com.holovetskyi.carcomposition.car.domain.Car;
 import com.holovetskyi.carcomposition.car.infrastracter.repo.CarRepo;
-import com.holovetskyi.carcomposition.car.web.dto.GetBodyTypeAndPriceDto;
-import com.holovetskyi.carcomposition.car.web.dto.GetCriterionDto;
-import com.holovetskyi.carcomposition.car.web.dto.GetSpecificEngineDto;
+import com.holovetskyi.carcomposition.car.web.dto.CriterionDto;
+import com.holovetskyi.carcomposition.car.web.dto.PriceBetweenDto;
+import com.holovetskyi.carcomposition.car.web.dto.SpecificEngineDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,15 +26,15 @@ public class CarService {
      * malejąco.
      */
 
-    public List<Car> sort(GetCriterionDto criterion) {
+    public List<Car> sort(CriterionDto criterion) {
 
         return criterion.isDescending() ?
-                switch (criterion.getCriterionTypeDto()) {
+                switch (criterion.getTypeDto()) {
                     case POWER -> getAllCars().stream().sorted(compareByPower).toList();
                     case SIZE -> getAllCars().stream().sorted(compareBySize).toList();
                     default -> getAllCars().stream().map(Car::newCarWithSortedComponents).toList();
                 } :
-                switch (criterion.getCriterionTypeDto()) {
+                switch (criterion.getTypeDto()) {
                     case POWER -> getAllCars().stream().sorted(compareByPowerDesc).toList();
                     case SIZE -> getAllCars().stream().sorted(compareBySizeDesc).toList();
                     default -> getAllCars().stream().map(Car::newCarWithSortedComponentsDesc).toList();
@@ -46,21 +46,12 @@ public class CarService {
      * przekazanym jako argument (CarBodyType) oraz o cenie z
      * przedziału <a, b>, gdzie a oraz b to kolejne argumenty metody.
      */
-
-//    public List<Car> filterByBodyTypeAndPriceFromTo(GetBodyTypeAndPriceDto bodyTypeAndPrice) {
-//
-//        return getAllCars()
-//                .stream()
-//                .filter(car -> car.hasBodyType(bodyTypeAndPrice.getBodyTypeDto()))
-//                .filter(car -> car.hasPriceBetween(bodyTypeAndPrice.getFrom(), bodyTypeAndPrice.getTo()))
-//                .toList();
-//    }
-    public List<Car> filterByBodyTypeAndPriceFromTo(GetBodyTypeAndPriceDto bodyTypeAndPrice) {
+    public List<Car> filterByBodyTypeAndPriceFromTo(PriceBetweenDto priceBetweenDto) {
 
         return getAllCars()
                 .stream()
-                .filter(car -> car.hasBodyType(bodyTypeAndPrice.getBodyTypeDto()))
-                .filter(car -> car.hasPriceBetween(bodyTypeAndPrice.getFrom(), bodyTypeAndPrice.getTo()))
+                .filter(car -> car.hasBodyType(priceBetweenDto.getBodyType()))
+                .filter(car -> car.hasPriceBetween(priceBetweenDto.getFrom(), priceBetweenDto.getTo()))
                 .toList();
     }
 
@@ -70,12 +61,18 @@ public class CarService {
      * jako argument metody.
      */
 
-    public List<Car> sortByModelAboutSpecificEngineDto(GetSpecificEngineDto dto) {
-        return null;
-    }
+    public List<Car> sortByModelAboutSpecificEngineDto(SpecificEngineDto engineDto) {
 
+        return getAllCars()
+                .stream()
+                .filter(car -> car.hasEngine(engineDto.engine))
+                .sorted(compareByModel)
+                .toList();
+    }
 
     private List<Car> getAllCars() {
         return carRepo.findAll();
     }
+
+
 }

@@ -1,6 +1,14 @@
 package com.holovetskyi.carcomposition.car.domain.enums;
 
-public enum EngineType {
+import java.util.Arrays;
 
-    DIESEL, GASOLINE, LPG
+public enum EngineType {
+    DIESEL, GASOLINE, LPG;
+
+    public static EngineType toEngineType(String engine) {
+        return Arrays.stream(values())
+                .filter(c -> c.name().equalsIgnoreCase(engine))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Invalid parameter: " + engine));
+    }
 }

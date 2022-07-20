@@ -2,11 +2,9 @@ package com.holovetskyi.carcomposition.car.web;
 
 import com.holovetskyi.carcomposition.car.application.CarService;
 import com.holovetskyi.carcomposition.car.domain.Car;
-import com.holovetskyi.carcomposition.car.web.dto.GetBodyTypeAndPriceDto;
-import com.holovetskyi.carcomposition.car.web.dto.GetCriterionDto;
-import com.holovetskyi.carcomposition.car.web.dto.GetSpecificEngineDto;
-import com.holovetskyi.carcomposition.car.web.dto.type.BodyTypeDto;
-import com.holovetskyi.carcomposition.car.web.dto.type.EngineTypeDto;
+import com.holovetskyi.carcomposition.car.web.dto.PriceBetweenDto;
+import com.holovetskyi.carcomposition.car.web.dto.CriterionDto;
+import com.holovetskyi.carcomposition.car.web.dto.SpecificEngineDto;
 import com.holovetskyi.carcomposition.validate.ValidatorDto;
 import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -35,9 +33,9 @@ public class CarController {
             @RequestParam Optional<Boolean> descending) {
 
         if (criterion.isPresent() && descending.isPresent()) {
-            return service.sort(new GetCriterionDto(criterion.get(), descending.get()));
+            return service.sort(new CriterionDto(criterion.get(), descending.get()));
         } else if (criterion.isPresent()) {
-            return service.sort(new GetCriterionDto(criterion.get(), false));
+            return service.sort(new CriterionDto(criterion.get(), false));
         }
         return Collections.emptyList();
     }
@@ -49,47 +47,27 @@ public class CarController {
             @PathVariable() BigDecimal from,
             @PathVariable BigDecimal to) {
 
-        var carBody = new RestBodyTypeAndPrice(body, from, to);
-
-        return service.filterByBodyTypeAndPriceFromTo(carBody.toBodyTypeAndPriceDto());
+        return service.filterByBodyTypeAndPriceFromTo(new PriceBetweenDto(body, from, to));
     }
 
     @GetMapping(value = "sort/model")
     @ResponseStatus(OK)
     List<Car> sortByModelAboutSpecificEngine(@RequestParam String engine) {
 
-        var dto = new RestSpecificEngine(engine);
-
-        return service.sortByModelAboutSpecificEngineDto(dto.toSpecificEngine());
+        return service.sortByModelAboutSpecificEngineDto(new SpecificEngineDto(engine));
     }
 
-    @AllArgsConstructor
-    public static class RestBodyTypeAndPrice {
-        String body;
-        BigDecimal from;
-        BigDecimal to;
-
-        public GetBodyTypeAndPriceDto toBodyTypeAndPriceDto() {
-            var validatorDto = new ValidatorDto<BodyTypeDto>();
-            var bodyTypeDto = validatorDto.isCorrectType(body).orElseThrow(() -> new IllegalArgumentException("Param incorrect: " + body));
-            if (!validatorDto.isPositive(from) && !validatorDto.isPositive(to)) {
-                throw new IllegalArgumentException("Parameter cannot be negative!");
-            }
-            return new GetBodyTypeAndPriceDto(bodyTypeDto, from, to);
-        }
-    }
-
-    @AllArgsConstructor
-    public static class RestSpecificEngine {
-
-        String engine;
-
-        public GetSpecificEngineDto toSpecificEngine () {
-            var validatorDto = new ValidatorDto<EngineTypeDto>()
-                    .isCorrectType(engine)
-                    .orElseThrow(() -> new IllegalArgumentException("Param incorrect: " + engine));
-            return new GetSpecificEngineDto(validatorDto);
-        }
-    }
+//    @AllArgsConstructor
+//    public static class RestSpecificEngine {
+//
+//        String engine;
+//
+//        public SpecificEngineDto toSpecificEngine () {
+//            var validatorDto = new ValidatorDto<EngineTypeDto>()
+//                    .isCorrectType(engine)
+//                    .orElseThrow(() -> new IllegalArgumentException("Param incorrect: " + engine));
+//            return new SpecificEngineDto(validatorDto);
+//        }
+//    }
 }
 

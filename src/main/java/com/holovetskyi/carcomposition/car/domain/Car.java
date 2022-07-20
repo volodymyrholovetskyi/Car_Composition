@@ -1,12 +1,11 @@
 package com.holovetskyi.carcomposition.car.domain;
 
-import com.holovetskyi.carcomposition.car.web.dto.type.BodyTypeDto;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
 
-import static com.holovetskyi.carcomposition.car.web.dto.type.BodyTypeDto.*;
+import static com.holovetskyi.carcomposition.car.domain.enums.CarBodyType.toBodyType;
+import static com.holovetskyi.carcomposition.car.domain.enums.EngineType.toEngineType;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -52,9 +51,14 @@ public class Car {
                 .build();
     }
 
-    public boolean hasBodyType(BodyTypeDto bodyTypeDto) {
-        return Arrays.stream(values())
-                .anyMatch(body -> body == bodyTypeDto);
+    public boolean hasBodyType(String bodyType) {
+        toBodyType(bodyType);
+        return true;
+    }
+
+    public boolean hasEngine(String engine) {
+        toEngineType(engine);
+        return true;
     }
 
     public boolean hasPriceBetween(BigDecimal priceFrom, BigDecimal priceTo) {
