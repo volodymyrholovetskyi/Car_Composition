@@ -1,7 +1,13 @@
 package com.holovetskyi.carcomposition.car.web.dto;
 
-    public record SpecificEngineDto(String engine) {
+import lombok.Data;
 
+@Data
+public class SpecificEngineDto {
+    public String engine;
 
+    public SpecificEngineDto(String engine) {
+        this.engine = engine;
+    }
 
 }

@@ -1,22 +1,34 @@
 package com.holovetskyi.carcomposition.car.web.dto;
 
-import com.holovetskyi.carcomposition.car.web.dto.type.CriterionType;
 import lombok.Data;
 
-import static com.holovetskyi.carcomposition.car.web.dto.type.CriterionType.checkCriterion;
+import java.util.Arrays;
+
+import static com.holovetskyi.carcomposition.car.web.dto.CriterionDto.CriterionTypeDto.toCriterionType;
 
 
 @Data
 public class CriterionDto {
 
     String criterion;
-
-    CriterionType criterionType;
+    CriterionTypeDto typeDto;
     boolean descending;
 
     public CriterionDto(String criterion, boolean descending) {
-        this.criterionType = checkCriterion(criterion);
+        this.typeDto = toCriterionType(criterion);
         this.descending = descending;
+    }
+
+    public enum CriterionTypeDto {
+
+        COMPONENTS, POWER, SIZE;
+
+        public static CriterionTypeDto toCriterionType(String criterion) {
+            return Arrays.stream(values())
+                    .filter(c -> c.name().equalsIgnoreCase(criterion))
+                    .findFirst()
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid parameter: " + criterion));
+        }
     }
 
 }

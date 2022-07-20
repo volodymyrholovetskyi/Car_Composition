@@ -2,12 +2,11 @@ package com.holovetskyi.carcomposition.car.web.dto.type;
 
 import java.util.Arrays;
 
-public enum CriterionType {
-
+public enum CriterionTypeDto {
 
     COMPONENTS, POWER, SIZE;
 
-    public static CriterionType checkCriterion(String criterion) {
+    public static CriterionTypeDto checkCriterion(String criterion) {
         return Arrays.stream(values())
                 .filter(c -> c.name().equalsIgnoreCase(criterion))
                 .findFirst()

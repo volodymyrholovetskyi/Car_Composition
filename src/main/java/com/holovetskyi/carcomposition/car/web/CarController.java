@@ -2,9 +2,11 @@ package com.holovetskyi.carcomposition.car.web;
 
 import com.holovetskyi.carcomposition.car.application.CarService;
 import com.holovetskyi.carcomposition.car.domain.Car;
-import com.holovetskyi.carcomposition.car.web.dto.BodyTypeAndPriceDto;
+import com.holovetskyi.carcomposition.car.web.dto.PriceBetweenDto;
 import com.holovetskyi.carcomposition.car.web.dto.CriterionDto;
 import com.holovetskyi.carcomposition.car.web.dto.SpecificEngineDto;
+import com.holovetskyi.carcomposition.validate.ValidatorDto;
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -24,39 +26,48 @@ public class CarController {
 
     private final CarService service;
 
-    @GetMapping(value = "/sort/criterion")
+    @GetMapping(value = "/sort")
     @ResponseStatus(OK)
-    List<Car> sortCars(
+    List<Car> sortCarsByCriterion(
             @RequestParam Optional<String> criterion,
-            @RequestParam Optional<Boolean> ascending) {
+            @RequestParam Optional<Boolean> descending) {
 
-        if (criterion.isPresent() && ascending.isPresent()) {
-            return service.sort(new CriterionDto(criterion.get(), ascending.get()));
+        if (criterion.isPresent() && descending.isPresent()) {
+            return service.sort(new CriterionDto(criterion.get(), descending.get()));
         } else if (criterion.isPresent()) {
-            return service.sort(new CriterionDto(criterion.get(), true));
+            return service.sort(new CriterionDto(criterion.get(), false));
         }
         return Collections.emptyList();
     }
 
     @GetMapping(value = "/{body}/{from}/{to}")
     @ResponseStatus(OK)
-    List<Car> carByBodyTypeAndPriceFromTo(
+    List<Car> sortCarsByBodyTypeAndPriceFromTo(
             @PathVariable String body,
             @PathVariable() BigDecimal from,
             @PathVariable BigDecimal to) {
 
-        var carBody = new BodyTypeAndPriceDto(body, from, to);
-
-        return service.filterByBodyTypeAndPriceFromTo(carBody);
+        return service.filterByBodyTypeAndPriceFromTo(new PriceBetweenDto(body, from, to));
     }
 
     @GetMapping(value = "sort/model")
     @ResponseStatus(OK)
     List<Car> sortByModelAboutSpecificEngine(@RequestParam String engine) {
-        var dto = new SpecificEngineDto(engine);
 
-        return service.sortByModelAboutSpecificEngineDto(engine);
-
+        return service.sortByModelAboutSpecificEngineDto(new SpecificEngineDto(engine));
     }
+
+//    @AllArgsConstructor
+//    public static class RestSpecificEngine {
+//
+//        String engine;
+//
+//        public SpecificEngineDto toSpecificEngine () {
+//            var validatorDto = new ValidatorDto<EngineTypeDto>()
+//                    .isCorrectType(engine)
+//                    .orElseThrow(() -> new IllegalArgumentException("Param incorrect: " + engine));
+//            return new SpecificEngineDto(validatorDto);
+//        }
+//    }
 }
 
